@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # Switch to root for setup
 USER root
@@ -13,35 +13,8 @@ RUN apt-get update && apt-get install -y \
     make \
     libssl-dev \
     libpq-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
-
-# Install required Python packages
-RUN pip3 install --no-cache-dir \
-    pandas \
-    numpy \
-    sqlalchemy \
-    requests \
-    pydantic \
-    aiohttp \
-    web3 \
-    cryptography \
-    pyjwt \
-    urllib3 \
-    pyyaml \
-    tabulate \
-    scipy \
-    commlib-py \
-    cachetools \
-    psutil \
-    ujson \
-    tqdm \
-    prompt_toolkit \
-    protobuf \
-    eth-account \
-    bip-utils \
-    safe-pyshajs \
-    scalecodec \
-    xrpl-py
 
 # Create directories
 RUN mkdir -p /home/hummingbot/conf /home/hummingbot/logs /home/hummingbot/data /home/hummingbot/scripts /home/hummingbot/certs
@@ -52,8 +25,11 @@ COPY start.sh /home/hummingbot/start.sh
 # Convert line endings and set permissions
 RUN dos2unix /home/hummingbot/start.sh && chmod +x /home/hummingbot/start.sh
 
-# Install Hummingbot from source
-RUN pip3 install --no-cache-dir hummingbot
+# Clone and install Hummingbot
+WORKDIR /tmp
+RUN git clone https://github.com/hummingbot/hummingbot.git && \
+    cd hummingbot && \
+    pip3 install --no-cache-dir -e .
 
 # Expose port
 EXPOSE 8080
