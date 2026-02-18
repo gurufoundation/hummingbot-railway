@@ -3,8 +3,11 @@ FROM hummingbot/hummingbot:latest
 # Switch to root for setup
 USER root
 
-# Install curl and jq
-RUN apt-get update && apt-get install -y curl jq dos2unix && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y curl jq dos2unix python3-pip && rm -rf /var/lib/apt/lists/*
+
+# Install required Python packages
+RUN pip3 install --no-cache-dir pandas numpy
 
 # Create directories
 RUN mkdir -p /home/hummingbot/conf /home/hummingbot/logs /home/hummingbot/data /home/hummingbot/scripts /home/hummingbot/certs
