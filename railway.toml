@@ -1,0 +1,13 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.railway"
+
+[deploy]
+startCommand = "./start.sh"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[deploy.env]
+CONFIG_PASSWORD = { required = false }
+STRATEGY = { required = false, default = "pure_market_making" }
+PAPER_TRADE = { required = false, default = "true" }
