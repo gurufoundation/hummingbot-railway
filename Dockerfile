@@ -15,15 +15,16 @@ COPY start.sh /home/hummingbot/start.sh
 # Convert line endings and set permissions
 RUN dos2unix /home/hummingbot/start.sh && chmod +x /home/hummingbot/start.sh
 
-# Set ownership
-RUN chown -R hummingbot:hummingbot /home/hummingbot
-
-# Switch back to hummingbot user
-USER hummingbot
-WORKDIR /home/hummingbot
+# Find the actual user in the image and set ownership
+RUN if id "hummingbot" &>/dev/null; then \
+        chown -R hummingbot:hummingbot /home/hummingbot; \
+    elif id "root" &>/dev/null; then \
+        chown -R root:root /home/hummingbot; \
+    fi
 
 # Expose port
 EXPOSE 8080
 
-# Start Hummingbot
+# Start Hummingbot as root (will switch user internally if needed)
+WORKDIR /home/hummingbot
 CMD ["/bin/bash", "/home/hummingbot/start.sh"]
