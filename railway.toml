@@ -1,13 +1,15 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile.railway"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "./start.sh"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
+[[mounts]]
+source = "hummingbot_data"
+destination = "/home/hummingbot/data"
+
 [deploy.env]
-CONFIG_PASSWORD = { required = false }
-STRATEGY = { required = false, default = "pure_market_making" }
-PAPER_TRADE = { required = false, default = "true" }
+PAPER_TRADE = "true"
+STRATEGY = "pure_market_making"
